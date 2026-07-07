@@ -88,12 +88,28 @@ app.post("/login", async (req, res) => {
 });
 app.post("/register", async (req, res) => {
   try {
-    const { name, password } = req.body;
-    const role = "user";
-    const result = await pool.query(
-      "INSERT INTO users(name, role, password) VALUES ($1, $2, $3) RETURNING *",
-      [name, role, password],
+    const { name, password, email } = req.body;
+
+    //check if email already exists
+    const existinguser = await pool.query(
+      "select * from users where email = $1",
+      [email],
     );
+
+    if (existinguser.rows.length > 0) {
+      return res
+        .status(400)
+        .json({ message: "Email is already registered", status: "failed" });
+    }
+
+    //change password to hash paswword
+    const hashedpassword = await bcrypt.hash(password, 12);
+
+    const result = await pool.query(
+      "INSERT INTO users(name, role, password, email) VALUES ($1, $2, $3, $4) RETURNING *",
+      [name, "user", hashedpassword, email],
+    );
+
     res.json({
       message: "User registered successfully",
       data: result.rows[0],
