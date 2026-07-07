@@ -5,6 +5,7 @@ const { OAuth2Client } = require("google-auth-library");
 const multer = require("multer");
 const { v2: cloudinary } = require("cloudinary");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const bcrypt = require("bcrypt");
 
 require("dotenv").config();
 cloudinary.config({
