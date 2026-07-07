@@ -47,35 +47,37 @@ app.post("/login", async (req, res) => {
     const { name, password } = req.body;
     console.log(req.body);
 
-    const existingUser = await pool.query("SELECT * FROM users where email = 1", [email]); 
-    if(existingUser.rows.length === 0){ 
-      return res.status(400).json({message:"Invalid Email", status:"failed"}); 
-    }
-    const matchResult = await bcrypt.compare(password, existingUser.rows[0].password); 
-    if(!matchResult) { 
-      return res.status(400).json({message:"Invalid Password", status:"failed"}); 
-    }
-
-    // Generate token 
-    const token = JWT.
-
-    const result = await pool.query(
-      "SELECT * FROM users WHERE name = $1 AND password = $2",
-      [name, password],
+    const existingUser = await pool.query(
+      "SELECT * FROM users where email = 1",
+      [email],
     );
-
-    if (result.rows.length === 0) {
-      res.status(401).json({
-        message: "Invalid credentials",
-        status: "failed",
-      });
-    } else {
-      res.json({
-        message: "Login successful",
-        data: result.rows[0],
-        status: "success",
-      });
+    if (existingUser.rows.length === 0) {
+      return res
+        .status(400)
+        .json({ message: "Invalid Email", status: "failed" });
     }
+    const matchResult = await bcrypt.compare(
+      password,
+      existingUser.rows[0].password,
+    );
+    if (!matchResult) {
+      return res
+        .status(400)
+        .json({ message: "Invalid Password", status: "failed" });
+    }
+
+    // Generate token
+    const token = jwt.sign(
+      { userId: existinguser.rows[0].id, role: existinguser.rows[0].role },
+      "jmikankit",
+      { expiresIn: "1d" },
+    );
+    res.json({
+      message: "Login successful",
+      data: existinguser.rows[0],
+      status: "success",
+      token: token,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({
