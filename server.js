@@ -49,7 +49,7 @@ app.post("/login", async (req, res) => {
     console.log(req.body);
 
     const existingUser = await pool.query(
-      "SELECT * FROM users where email = 1",
+      "SELECT * FROM users where email = $1",
       [email],
     );
     if (existingUser.rows.length === 0) {
