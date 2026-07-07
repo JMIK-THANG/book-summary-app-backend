@@ -45,7 +45,7 @@ app.post("/upload", upload.single("pic"), async (req, res) => {
 
 app.post("/login", async (req, res) => {
   try {
-    const { name, password } = req.body;
+    const { email, password } = req.body;
     console.log(req.body);
 
     const existingUser = await pool.query(
