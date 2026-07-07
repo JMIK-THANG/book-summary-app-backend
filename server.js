@@ -70,13 +70,13 @@ app.post("/login", async (req, res) => {
 
     // Generate token
     const token = jwt.sign(
-      { userId: existinguser.rows[0].id, role: existinguser.rows[0].role },
+      { userId: existingUser.rows[0].id, role: existingUser.rows[0].role },
       "jmikankit",
       { expiresIn: "1d" },
     );
     res.json({
       message: "Login successful",
-      data: existinguser.rows[0],
+      data: existingUser.rows[0],
       status: "success",
       token: token,
     });
