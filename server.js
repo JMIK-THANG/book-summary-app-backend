@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const pool = require("../backend/config/db");
+const pool = require("./config/db");
 const { OAuth2Client } = require("google-auth-library");
 const multer = require("multer");
 const { v2: cloudinary } = require("cloudinary");
@@ -46,6 +46,19 @@ app.post("/login", async (req, res) => {
   try {
     const { name, password } = req.body;
     console.log(req.body);
+
+    const existingUser = await pool.query("SELECT * FROM users where email = 1", [email]); 
+    if(existingUser.rows.length === 0){ 
+      return res.status(400).json({message:"Invalid Email", status:"failed"}); 
+    }
+    const matchResult = await bcrypt.compare(password, existingUser.rows[0].password); 
+    if(!matchResult) { 
+      return res.status(400).json({message:"Invalid Password", status:"failed"}); 
+    }
+
+    // Generate token 
+    const token = JWT.
+
     const result = await pool.query(
       "SELECT * FROM users WHERE name = $1 AND password = $2",
       [name, password],
