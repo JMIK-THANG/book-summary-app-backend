@@ -6,6 +6,7 @@ const multer = require("multer");
 const { v2: cloudinary } = require("cloudinary");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken"); 
 
 require("dotenv").config();
 cloudinary.config({
