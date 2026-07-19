@@ -1,4 +1,4 @@
-const pool = require("../backend/config/db");
+const pool = require("../config/db");
 
 const addComment = async (req, res) => {
   try {

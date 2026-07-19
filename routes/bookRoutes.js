@@ -7,8 +7,8 @@ const {
   updateBook,
   deleteBook,
 } = require("../controller/bookController");
-const authenticateToken = requier("../backend/middleware/authentication");
-const upload = require("../backend/middleware/upload");
+const authenticateToken = require("../middleware/authentication");
+const upload = require("../middleware/upload");
 
 bookRouter.get("/books", getBooks);
 

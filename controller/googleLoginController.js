@@ -1,5 +1,5 @@
 const {OAuth2Client} = require("google-auth-library"); 
-const pool = require("../backend/config/db"); 
+const pool = require("../config/db"); 
 
 const googleLogin = async (req, res) => {
   try {

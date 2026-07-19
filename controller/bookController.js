@@ -1,4 +1,4 @@
-const pool = require("../backend/config/db");
+const pool = require("../config/db");
 
 const getBooks = async (req, res) => {
   try {
