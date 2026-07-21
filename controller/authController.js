@@ -2,7 +2,6 @@ const pool = require("../config/db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -29,8 +28,11 @@ const login = async (req, res) => {
 
     // Generate token
     const token = jwt.sign(
-      { userId: existingUser.rows[0].id, role: existingUser.rows[0].role },
-      "jmikankit",
+      {
+        userId: existingUser.rows[0].id,
+        role: existingUser.rows[0].role,
+      },
+      process.env.JWT_SECRET,
       { expiresIn: "1d" },
     );
     res.json({
