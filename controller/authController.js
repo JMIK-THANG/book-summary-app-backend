@@ -33,7 +33,7 @@ const login = async (req, res) => {
         role: existingUser.rows[0].role,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" },
+      { expiresIn: "7d" },
     );
     res.json({
       message: "Login successful",
