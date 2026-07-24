@@ -8,7 +8,7 @@ const googleLogin = async (req, res) => {
     const client = new OAuth2Client(
       process.env.CLIENT_ID,
       process.env.SECRET_ID,
-      process.env.DOMAIN,
+     "postmessage"
     );
 
     const { tokens } = await client.getToken(code);
