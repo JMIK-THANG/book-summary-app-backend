@@ -1,17 +1,20 @@
-const {OAuth2Client} = require("google-auth-library"); 
-const pool = require("../config/db"); 
+const { OAuth2Client } = require("google-auth-library");
+const pool = require("../config/db");
 
 const googleLogin = async (req, res) => {
   try {
     const { code } = req.body;
-
+    console.log(code);
+    console.log(process.env.ClIENT_ID);
+    console.log(process.env.SECRET_ID);
     const client = new OAuth2Client(
-      process.env.CLIENT_ID,
+      process.env.ClIENT_ID,
       process.env.SECRET_ID,
-     "postmessage"
+      "postmessage",
     );
 
     const { tokens } = await client.getToken(code);
+
 
     const response = await fetch(
       "https://www.googleapis.com/oauth2/v3/userinfo",
@@ -44,6 +47,6 @@ const googleLogin = async (req, res) => {
     console.error(error);
     res.status(500).json({ message: error.message });
   }
-}
+};
 
-module.exports = googleLogin; 
+module.exports = googleLogin;
