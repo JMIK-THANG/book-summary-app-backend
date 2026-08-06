@@ -21,7 +21,7 @@ bookRouter.post(
   addBook
 );
 
-bookRouter.put("/books/:id", authenticateToken, updateBook);
+bookRouter.put("/books/:id", authenticateToken,upload.single("image"), updateBook);
 
 bookRouter.delete("/books/:id", authenticateToken, deleteBook);
 

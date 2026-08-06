@@ -9,40 +9,61 @@ const getBooks = async (req, res) => {
       status: "success",
     });
   } catch (error) {
-    res.status(500).json({ message: error.message, status: "failed" });
+    res.status(500).json({
+      message: error.message,
+      status: "failed",
+    });
   }
 };
 
 const addBook = async (req, res) => {
   try {
-    const { title, author, summary } = req.body || {};
+    const { title, author, summary, category } = req.body || {};
     const image = req.file ? req.file.path : null;
 
     const result = await pool.query(
-      "INSERT INTO books(title, author, image, summary) VALUES ($1, $2, $3, $4) RETURNING *",
-      [title, author, image, summary],
+      `INSERT INTO books (title, author, image, summary, category)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING *`,
+      [title, author, image, summary, category],
     );
 
-    res.json({
+    res.status(201).json({
       data: result.rows[0],
       status: "success",
     });
   } catch (error) {
-    res.status(500).json({ message: error.message, status: "failed" });
+    res.status(500).json({
+      message: error.message,
+      status: "failed",
+    });
   }
 };
+
 const updateBook = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, author, image, summary } = req.body;
+    const { title, author, summary, category } = req.body;
+    const image = req.file?.path || null;
 
     const result = await pool.query(
       `UPDATE books
-       SET title = $1, author = $2, image = $3, summary = $4
-       WHERE id = $5
+       SET title = $1,
+           author = $2,
+           image = $3,
+           summary = $4,
+           category = $5
+       WHERE id = $6
        RETURNING *`,
-      [title, author, image, summary, id],
+      [title, author, image, summary, category, id],
     );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        message: "Book not found",
+        status: "failed",
+      });
+    }
 
     res.json({
       message: "Book updated successfully",
@@ -56,13 +77,14 @@ const updateBook = async (req, res) => {
     });
   }
 };
+
 const deleteBook = async (req, res) => {
   try {
     const { id } = req.params;
 
     const result = await pool.query(
       "DELETE FROM books WHERE id = $1 RETURNING *",
-      [id]
+      [id],
     );
 
     if (result.rows.length === 0) {
