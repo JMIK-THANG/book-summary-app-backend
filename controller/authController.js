@@ -4,11 +4,18 @@ const jwt = require("jsonwebtoken");
 
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    console.log(req.body);
+    const email = req.body?.email?.trim().toLowerCase();
+    const password = req.body?.password;
+
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "Email and password are required",
+        status: "failed",
+      });
+    }
 
     const existingUser = await pool.query(
-      "SELECT * FROM users where email = $1",
+      "SELECT * FROM users WHERE LOWER(TRIM(email)) = $1",
       [email],
     );
     if (existingUser.rows.length === 0) {
@@ -51,11 +58,12 @@ const login = async (req, res) => {
 };
 const register = async (req, res) => {
   try {
-    const { name, password, email } = req.body;
+    const { name, password } = req.body;
+    const email = req.body.email.trim().toLowerCase();
 
     //check if email already exists
     const existinguser = await pool.query(
-      "select * from users where email = $1",
+      "SELECT * FROM users WHERE LOWER(TRIM(email)) = $1",
       [email],
     );
 
