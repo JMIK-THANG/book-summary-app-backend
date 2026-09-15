@@ -7,6 +7,8 @@ const {
   updateBook,
   deleteBook,
   incrementViews,
+  getSavedBooks,
+  toggleSaveBook,
 } = require("../controller/bookController");
 
 const authenticateToken = require("../middleware/authentication");
@@ -14,18 +16,20 @@ const upload = require("../middleware/upload");
 
 bookRouter.get("/books", getBooks);
 
-bookRouter.post(
-  "/books",
+bookRouter.post("/books", authenticateToken, upload.single("image"), addBook);
+
+bookRouter.put(
+  "/books/:id",
   authenticateToken,
   upload.single("image"),
-  addBook
+  updateBook,
 );
-
-bookRouter.put("/books/:id", authenticateToken,upload.single("image"), updateBook);
 
 bookRouter.delete("/books/:id", authenticateToken, deleteBook);
 
 // No authentication required when a reader views a book
 bookRouter.patch("/books/:id/view", incrementViews);
+bookRouter.get("books/saved/:userId", getSavedBooks);
+bookRouter.post("/books/saved", toggleSaveBook);
 
 module.exports = bookRouter;

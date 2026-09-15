@@ -136,11 +136,58 @@ const incrementViews = async (req, res) => {
     });
   }
 };
+const getSavedBooks = async (req, res) => {
+  try {
+    const userId = parse(req.params.userId);
+    const result = await pool.query(
+      `SELECT * FROM books where id In(SELECT book_id FROM saved_books WHERE user_id = #1)`,
+      [userId],
+    );
 
+    res.json({
+      data: result.rows,
+      status: "success",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+      status: "failed",
+    });
+  }
+};
+const toggleSaveBook = async(req,res) => { 
+  try{ 
+    const userId = parseInt(req.body.userId); 
+    const bookId = parseInt(req.body.bookId); 
+
+    const checkResult = await pool.query(`SELECT * FROM saved_books WHERE users_id = $1 and book_id = $2`,[userId,bookId]); 
+
+    if(checkResult.rows.length === 0) { 
+      await pool.query(`INSERT INTO saved_bookds(user_id, book_id) VALUE($1,$2)`, [userId,bookId])
+      res.json({
+        message:"Book saved successfully",
+        status:"success"
+      })
+    } else { 
+      await pool.query(`DELETE FROM saved_books WHERE user_id = $1 AND bookd_id = $2`, [userId, bookId]); 
+      res.json({
+        message:"Book unsaved successfully"; 
+        status:"success",
+      })
+    }
+  } catch(error) { 
+    res.status(500).json({
+      message:error.message,
+      status:"failed",
+    })
+  }
+}
 module.exports = {
   getBooks,
   addBook,
   updateBook,
   deleteBook,
   incrementViews,
+  getSavedBooks,
+  toggleSaveBook,
 };
