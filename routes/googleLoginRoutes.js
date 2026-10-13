@@ -1,8 +1,14 @@
 const express = require("express");
 const googleLoginRouter = express.Router();
 
-const googleLogin = require("../controller/googleLoginController");
+const googleLoginController = require("../controller/googleLoginController");
 
-googleLoginRouter.post("/google-login", googleLogin);
+function googleLoginRoute(pool) { 
 
-module.exports = googleLoginRouter;
+      googleLoginRouter.post("/", googleLoginController(pool).googleLogin);
+
+      return googleLoginRouter; 
+}
+
+
+module.exports = googleLoginRoute;

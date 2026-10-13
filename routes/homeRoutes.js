@@ -1,8 +1,15 @@
 const express = require("express");
-const { getDashboardStats } = require("../controller/homeController");
+const { dashboardController } = require("../controller/homeController");
 
-const homeRouter = express.Router();
+const dashboardRouter = express.Router();
 
-homeRouter.get("/dashboard-stats", getDashboardStats);
+function dashboardRoute(pool) {
+  dashboardRouter.get(
+    "/dashboard-stats",
+    dashboardController(pool).getDashboardStats,
+  );
 
-module.exports = homeRouter;
+  return dashboardRouter;
+}
+
+module.exports = dashboardRoute;
