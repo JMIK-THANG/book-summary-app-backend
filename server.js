@@ -19,7 +19,7 @@ app.use(express.json());
 
 app.use("/auth", authRoutes(pool));
 app.use("/books", bookRoutes(pool));
-app.use("/comment", commentRoutes(pool));
+app.use("/comments", commentRoutes(pool));
 app.use("/google-login", googleLoginRoute(pool));
 app.use("/home", dashboardRoute(pool));
 app.use("/short-reads", shortReadRoutes(pool));

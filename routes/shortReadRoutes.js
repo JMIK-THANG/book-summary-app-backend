@@ -5,7 +5,7 @@ const { shortReadController } = require("../controller/shortReadController");
 const shortReadRouter = express.Router();
 
 function shortReadRoutes(pool) {
-  shortReadRouter.get("/short-reads", shortReadController(pool).getShortReads);
+  shortReadRouter.get("/", shortReadController(pool).getShortReads);
   shortReadRouter.post(
     "/",
     authenticateToken,
