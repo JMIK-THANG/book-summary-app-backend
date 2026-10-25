@@ -12,7 +12,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: "cabusim-books",
+    folder: "1989 book summaries",
     allowed_formats: ["jpg", "jpeg", "png", "webp"],
   },
 });
